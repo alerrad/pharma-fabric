@@ -1,0 +1,44 @@
+$ bash network/scripts/deploy_cc.sh medicinebatch_vuln 1.0 1 chaincode/medicinebatch-vuln
+==> 0. Зависимости Go (vendor) для ~/pharma-fabric/chaincode/medicinebatch-vuln
+go vet: OK
+==> 1. Package: label=medicinebatch_vuln_1.0
+PACKAGE_ID=medicinebatch_vuln_1.0:5c08e271293728962623fc93185a97d304cd12f4ac77c39f6ccc70480cc0f656
+==> 2. Install на peer0.org1 (сборка golang-native builder)
+2026-10-29 15:05:01.341 +05 0001 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Installed remotely: response:{status:200 payload:"\nWmedicinebatch_vuln_1.0:5c08e271293728962623fc93185a97d304cd12f4ac77c39f6ccc70480cc0f656\x12\x16medicinebatch_vuln_1.0"}
+2026-10-29 15:05:01.341 +05 0002 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Chaincode code package identifier: medicinebatch_vuln_1.0:5c08e271293728962623fc93185a97d304cd12f4ac77c39f6ccc70480cc0f656
+==> 2. Install на peer0.org2 (сборка golang-native builder)
+2026-10-29 15:05:28.096 +05 0001 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Installed remotely: response:{status:200 payload:"\nWmedicinebatch_vuln_1.0:5c08e271293728962623fc93185a97d304cd12f4ac77c39f6ccc70480cc0f656\x12\x16medicinebatch_vuln_1.0"}
+2026-10-29 15:05:28.096 +05 0002 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Chaincode code package identifier: medicinebatch_vuln_1.0:5c08e271293728962623fc93185a97d304cd12f4ac77c39f6ccc70480cc0f656
+Installed chaincodes on peer:
+Package ID: medicinebatch_1.0:255ef1876ae8b61b2795c215d59fd48ae599993f05ac2916c19fc7365aceb42f, Label: medicinebatch_1.0
+Package ID: medicinebatch_vuln_1.0:5c08e271293728962623fc93185a97d304cd12f4ac77c39f6ccc70480cc0f656, Label: medicinebatch_vuln_1.0
+==> 3. Approve for Org1MSP: version=1.0 sequence=1
+2026-10-29 15:05:30.229 +05 0001 INFO [chaincodeCmd] ClientWait -> txid [53d70d129d353ce17c1bd62ec3cc81095bce9dce0c0f34798569083bf4cb761e] committed with status (VALID) at localhost:7051
+==> 3. Approve for Org2MSP: version=1.0 sequence=1
+2026-10-29 15:05:32.292 +05 0001 INFO [chaincodeCmd] ClientWait -> txid [7a17d091dca69e83065881f35c0e42a1e56f0cb9741e81ffd8d11df6ce508455] committed with status (VALID) at localhost:9051
+==> 4. Check commit readiness
+{
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": true
+	}
+}
+==> 5. Commit
+2026-10-29 15:05:34.415 +05 0001 INFO [chaincodeCmd] ClientWait -> txid [f711a2aa3c8701d6e5709970ae23fd82c56e52313f5e8468d3ea434fce605abe] committed with status (VALID) at localhost:9051
+2026-10-29 15:05:34.416 +05 0002 INFO [chaincodeCmd] ClientWait -> txid [f711a2aa3c8701d6e5709970ae23fd82c56e52313f5e8468d3ea434fce605abe] committed with status (VALID) at localhost:7051
+==> 6. Query committed
+Committed chaincode definition for chaincode 'medicinebatch_vuln' on channel 'pharmachannel':
+Version: 1.0, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]
+{
+	"sequence": 1,
+	"version": "1.0",
+	"endorsement_plugin": "escc",
+	"validation_plugin": "vscc",
+	"validation_parameter": "CiwSDBIKCAISAggAEgIIARoNEgsKB09yZzFNU1AQAxoNEgsKB09yZzJNU1AQAw==",
+	"collections": {},
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": true
+	}
+}
+✔ medicinebatch_vuln 1.0 (sequence 1) зафиксирован в канале pharmachannel

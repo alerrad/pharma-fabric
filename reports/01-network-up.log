@@ -1,0 +1,54 @@
+$ bash network/scripts/network.sh up
+==> Запуск ca-org1 на порту 7054
+==> Запуск ca-org2 на порту 8054
+==> Запуск ca-orderer на порту 9054
+==> [ca-org1] enroll bootstrap admin
+✔ peer0.org1.example.com: MSP и TLS выпущены
+✔ Admin@org1.example.com (admin)
+✔ production@org1.example.com (client, role=production:ecert)
+✔ qa@org1.example.com (client, role=qa:ecert)
+✔ clerk@org1.example.com (client, role=clerk:ecert)
+==> [ca-org2] enroll bootstrap admin
+✔ peer0.org2.example.com: MSP и TLS выпущены
+✔ Admin@org2.example.com (admin)
+✔ logistics@org2.example.com (client, role=logistics:ecert)
+==> [ca-orderer] enroll bootstrap admin
+✔ orderer.example.com: MSP и TLS выпущены
+✔ Admin@example.com (admin)
+✔ Fabric CA: идентичности выпущены
+==> Запуск orderer.example.com (Raft) :7050, admin :7053
+==> Запуск peer0.org1.example.com :7051
+==> Запуск peer0.org2.example.com :9051
+==> Генерация блока конфигурации канала pharmachannel (configtxgen)
+2026-10-29 15:03:03.749 +05 0001 INFO [common.tools.configtxgen] main -> Loading configuration
+2026-10-29 15:03:03.753 +05 0002 INFO [common.tools.configtxgen.localconfig] completeInitialization -> orderer type: etcdraft
+2026-10-29 15:03:03.753 +05 0003 INFO [common.tools.configtxgen.localconfig] completeInitialization -> Orderer.EtcdRaft.Options unset, setting to tick_interval:"500ms" election_tick:10 heartbeat_tick:1 max_inflight_blocks:5 snapshot_interval_size:16777216
+2026-10-29 15:03:03.753 +05 0004 INFO [common.tools.configtxgen.localconfig] Load -> Loaded configuration: ~/pharma-fabric/network/runtime/configtx.yaml
+2026-10-29 15:03:03.755 +05 0005 INFO [common.tools.configtxgen] doOutputBlock -> Generating genesis block
+2026-10-29 15:03:03.755 +05 0006 INFO [common.tools.configtxgen] doOutputBlock -> Creating application channel genesis block
+2026-10-29 15:03:03.756 +05 0007 INFO [common.tools.configtxgen] doOutputBlock -> Writing genesis block
+==> Подключение orderer к каналу (osnadmin, Channel Participation API)
+Status: 201
+{
+	"name": "pharmachannel",
+	"url": "/participation/v1/channels/pharmachannel",
+	"consensusRelation": "consenter",
+	"status": "active",
+	"height": 1
+}
+
+==> peer0.org1 присоединяется к каналу
+2026-10-29 15:03:06.873 +05 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+2026-10-29 15:03:06.904 +05 0002 INFO [channelCmd] executeJoin -> Successfully submitted proposal to join channel
+==> peer0.org2 присоединяется к каналу
+2026-10-29 15:03:06.972 +05 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+2026-10-29 15:03:07.000 +05 0002 INFO [channelCmd] executeJoin -> Successfully submitted proposal to join channel
+2026-10-29 15:03:10.061 +05 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+Channels peers has joined: 
+pharmachannel
+2026-10-29 15:03:10.114 +05 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+Blockchain info: {"height":1,"currentBlockHash":"aN7Nh0fiy7kpVePUuwES7KApLWR7kXCqmZ9zE2KGju0="}
+✔ Сеть запущена: канал pharmachannel, Org1MSP + Org2MSP + OrdererMSP
+Terminated
+Terminated
+Terminated

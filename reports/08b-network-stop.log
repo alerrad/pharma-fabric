@@ -1,0 +1,2 @@
+$ bash network/scripts/network.sh stop
+✔ Узлы остановлены

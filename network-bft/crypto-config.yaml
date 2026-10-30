@@ -1,0 +1,16 @@
+# Криптоматериал стенда SmartBFT (cryptogen): 4 узла ordering service и одна организация peer.
+OrdererOrgs:
+  - Name: Orderer
+    Domain: example.com
+    EnableNodeOUs: true
+    Specs:
+      - { Hostname: orderer1, SANS: [localhost, 127.0.0.1] }
+      - { Hostname: orderer2, SANS: [localhost, 127.0.0.1] }
+      - { Hostname: orderer3, SANS: [localhost, 127.0.0.1] }
+      - { Hostname: orderer4, SANS: [localhost, 127.0.0.1] }
+PeerOrgs:
+  - Name: Org1
+    Domain: org1.example.com
+    EnableNodeOUs: true
+    Template: { Count: 1, SANS: [localhost, 127.0.0.1] }
+    Users: { Count: 1 }

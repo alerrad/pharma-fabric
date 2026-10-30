@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+"""External builder: release.
+Передаёт peer индексы state database (META-INF/statedb), если они есть.
+Аргументы: <BUILD_OUTPUT_DIR> <RELEASE_OUTPUT_DIR>"""
+import os, shutil, sys
+
+build_out, release = sys.argv[1], sys.argv[2]
+statedb = os.path.join(build_out, "META-INF", "statedb")
+if os.path.isdir(statedb):
+    shutil.copytree(statedb, os.path.join(release, "statedb"), dirs_exist_ok=True)

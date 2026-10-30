@@ -1,0 +1,18 @@
+$ bash network-bft/bft.sh up
+==> Криптоматериал (cryptogen) для 4 orderer и Org1
+✔ orderer1..4 запущены
+==> Блок конфигурации канала bftchannel (OrdererType: BFT, Channel capability V3_0)
+2026-10-29 15:08:17.090 +05 0006 INFO [common.tools.configtxgen] doOutputBlock -> Writing genesis block
+Status: 201
+Status: 201
+Status: 201
+Status: 201
+==> peer0.org1 :7251
+2026-10-29 15:08:17.895 +05 0002 INFO [channelCmd] executeJoin -> Successfully submitted proposal to join channel
+==> Chaincode medicinebatch 1.0 на стенде BFT (политика OR('Org1MSP.peer'))
+Chaincode code package identifier: medicinebatch_1.0:255ef1876ae8b61b2795c215d59fd48ae599993f05ac2916c19fc7365aceb42f
+committed with status (VALID) at localhost:7251
+committed with status (VALID) at localhost:7251
+Committed chaincode definition for chaincode 'medicinebatch' on channel 'bftchannel':
+Version: 1.0, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true]
+✔ Стенд SmartBFT готов

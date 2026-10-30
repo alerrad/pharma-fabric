@@ -1,0 +1,97 @@
+$ bash network/scripts/upgrade_v2.sh
+==> 3.1 Исходное состояние ДО обновления
+Committed chaincode definition for chaincode 'medicinebatch' on channel 'pharmachannel':
+Version: 1.0, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]
+Package ID: medicinebatch_secure_1.0:327aec819d4a9d0d1a7de7a97857a7b5c75b226aeb03ad181762ad782706a481, Label: medicinebatch_secure_1.0
+Package ID: medicinebatch_1.0:255ef1876ae8b61b2795c215d59fd48ae599993f05ac2916c19fc7365aceb42f, Label: medicinebatch_1.0
+Package ID: medicinebatch_vuln_1.0:5c08e271293728962623fc93185a97d304cd12f4ac77c39f6ccc70480cc0f656, Label: medicinebatch_vuln_1.0
+ReadBatch BATCH-2026-001 (до):
+BATCH-2026-001: status=RECEIVED holder=Org2MSP
+BATCH-2026-001: status=RECEIVED holder=Org2MSP
+BATCH-2026-002: status=REJECTED holder=Org1MSP
+BATCH-2026-003: status=REJECTED holder=Org1MSP
+GetChaincodeInfo в v1.0: Error: endorsement failure during query. response: status:500 message:"unknown function \"GetChaincodeInfo\""
+==> 3.2–3.5 Package → Install → Approve → Commit для версии 2.0 / sequence 2
+==> 0. Зависимости Go (vendor) для ~/pharma-fabric/chaincode/medicinebatch-v2
+go vet: OK
+==> 1. Package: label=medicinebatch_2.0
+PACKAGE_ID=medicinebatch_2.0:d939c37c5a7fc1b7bbf37eb72254de07caacc5b677da71f0905801c1f2b554b1
+==> 2. Install на peer0.org1 (сборка golang-native builder)
+2026-10-29 15:07:27.396 +05 0001 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Installed remotely: response:{status:200 payload:"\nRmedicinebatch_2.0:d939c37c5a7fc1b7bbf37eb72254de07caacc5b677da71f0905801c1f2b554b1\x12\x11medicinebatch_2.0"}
+2026-10-29 15:07:27.397 +05 0002 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Chaincode code package identifier: medicinebatch_2.0:d939c37c5a7fc1b7bbf37eb72254de07caacc5b677da71f0905801c1f2b554b1
+==> 2. Install на peer0.org2 (сборка golang-native builder)
+2026-10-29 15:07:55.266 +05 0001 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Installed remotely: response:{status:200 payload:"\nRmedicinebatch_2.0:d939c37c5a7fc1b7bbf37eb72254de07caacc5b677da71f0905801c1f2b554b1\x12\x11medicinebatch_2.0"}
+2026-10-29 15:07:55.266 +05 0002 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Chaincode code package identifier: medicinebatch_2.0:d939c37c5a7fc1b7bbf37eb72254de07caacc5b677da71f0905801c1f2b554b1
+Installed chaincodes on peer:
+Package ID: medicinebatch_vuln_1.0:5c08e271293728962623fc93185a97d304cd12f4ac77c39f6ccc70480cc0f656, Label: medicinebatch_vuln_1.0
+Package ID: medicinebatch_secure_1.0:327aec819d4a9d0d1a7de7a97857a7b5c75b226aeb03ad181762ad782706a481, Label: medicinebatch_secure_1.0
+Package ID: medicinebatch_2.0:d939c37c5a7fc1b7bbf37eb72254de07caacc5b677da71f0905801c1f2b554b1, Label: medicinebatch_2.0
+Package ID: medicinebatch_1.0:255ef1876ae8b61b2795c215d59fd48ae599993f05ac2916c19fc7365aceb42f, Label: medicinebatch_1.0
+==> 3. Approve for Org1MSP: version=2.0 sequence=2
+2026-10-29 15:07:57.422 +05 0001 INFO [chaincodeCmd] ClientWait -> txid [782630c5c1247b797a7ba2a214bba8e494bcaf3723dfce54cc153291c30544b4] committed with status (VALID) at localhost:7051
+==> 3. Approve for Org2MSP: version=2.0 sequence=2
+2026-10-29 15:07:59.504 +05 0001 INFO [chaincodeCmd] ClientWait -> txid [f461365007dd53d6cde3b8bbc02b2d08c3aee5f2b9be8009cb310de1507f0986] committed with status (VALID) at localhost:9051
+==> 4. Check commit readiness
+{
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": true
+	}
+}
+==> 5. Commit
+2026-10-29 15:08:01.651 +05 0001 INFO [chaincodeCmd] ClientWait -> txid [334c95a8e3d8d152833248751427dd721160c788afb864bb46528a3655171cdc] committed with status (VALID) at localhost:7051
+2026-10-29 15:08:01.651 +05 0002 INFO [chaincodeCmd] ClientWait -> txid [334c95a8e3d8d152833248751427dd721160c788afb864bb46528a3655171cdc] committed with status (VALID) at localhost:9051
+==> 6. Query committed
+Committed chaincode definition for chaincode 'medicinebatch' on channel 'pharmachannel':
+Version: 2.0, Sequence: 2, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]
+{
+	"sequence": 2,
+	"version": "2.0",
+	"endorsement_plugin": "escc",
+	"validation_plugin": "vscc",
+	"validation_parameter": "CiwSDBIKCAISAggAEgIIARoNEgsKB09yZzFNU1AQAxoNEgsKB09yZzJNU1AQAw==",
+	"collections": {},
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": true
+	}
+}
+✔ medicinebatch 2.0 (sequence 2) зафиксирован в канале pharmachannel
+==> 3.5 Проверка определения ПОСЛЕ обновления
+Committed chaincode definition for chaincode 'medicinebatch' on channel 'pharmachannel':
+Version: 2.0, Sequence: 2, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]
+Package ID: medicinebatch_1.0:255ef1876ae8b61b2795c215d59fd48ae599993f05ac2916c19fc7365aceb42f, Label: medicinebatch_1.0
+Package ID: medicinebatch_vuln_1.0:5c08e271293728962623fc93185a97d304cd12f4ac77c39f6ccc70480cc0f656, Label: medicinebatch_vuln_1.0
+Package ID: medicinebatch_secure_1.0:327aec819d4a9d0d1a7de7a97857a7b5c75b226aeb03ad181762ad782706a481, Label: medicinebatch_secure_1.0
+Package ID: medicinebatch_2.0:d939c37c5a7fc1b7bbf37eb72254de07caacc5b677da71f0905801c1f2b554b1, Label: medicinebatch_2.0
+version: 1.0 → 2.0; sequence: 1 → 2
+Endorsement Policy сохранена (validation_parameter совпадает): True
+==> 3.6 Обратная совместимость
+GetChaincodeInfo (новая функция): {"schemaVersion":2,"version":"2.0"}
+Объект BATCH-2026-001, записанный v1.0, прочитан v2.0 без изменений: True
+  lastTxID=5f35b3a87f75539a747f..., status=RECEIVED, schemaVersion в объекте: нет (объект v1.0)
+-- старая операция CreateBatch с 6 аргументами (формат v1.0):
+txid [c04c775ea5c86d81ba98577d46151dfb44d9d50c6003ade5b45f6333a91808a7] committed with status (VALID) at localhost:7051
+-- старая операция UpdateStatus на объекте v1.0 (BATCH-2026-002 REJECTED → RELEASED, ожидается отказ по правилам v1.0):
+message:"transition REJECTED -> RELEASED is not allowed"
+-- новый формат CreateBatch (7-й аргумент storageCondition=2-8C):
+txid [4a1793f4d90ade3407c5833d47e6b67779c035f1955f15a5afd9478dc49303b8] committed with status (VALID) at localhost:7051
+-- новая операция RecordTemperature на объекте v1.0 (держатель Org2, 6.5 °C при норме 15–25 °C):
+txid [d59c4caf9feb9789f88231cf8bf7d3c3aa5c2dca324b98ce97b78b89e4d3617f] committed with status (VALID) at localhost:9051
+txid [f767a66c98387a0833e777c4356bc86e22090c0bfc520a577598f67594143240] committed with status (VALID) at localhost:9051
+BATCH-2026-001 после RecordTemperature: schemaVersion=2 storageCondition=15-25C excursions=1 readings=[(6.5, False), (21, True)]
+-- RecordTemperature от не-держателя (Org1), ожидается отказ:
+message:"only current holder may record temperature: access denied: operation requires Org2MSP, caller is Org1MSP"
+-- GetBatchHistory BATCH-2026-001 (изменения v1.0 и v2.0):
+   2026-10-29T10:08:08Z  f767a66c98387a08...  RECEIVED  holder=Org2MSP
+   2026-10-29T10:08:06Z  d59c4caf9feb9789...  RECEIVED  holder=Org2MSP
+   2026-10-29T10:04:22Z  5f35b3a87f75539a...  RECEIVED  holder=Org2MSP
+   2026-10-29T10:04:20Z  c39ea83457e0442e...  SHIPPED   holder=Org2MSP
+   2026-10-29T10:04:18Z  939354747447fe08...  RELEASED  holder=Org1MSP
+   2026-10-29T10:04:14Z  628a67ccd4d59bc4...  CREATED   holder=Org1MSP
+-- GetAllBatches:
+BATCH-2026-001: status=RECEIVED holder=Org2MSP
+BATCH-2026-002: status=REJECTED holder=Org1MSP
+BATCH-2026-003: status=REJECTED holder=Org1MSP
+BATCH-2026-005: status=CREATED holder=Org1MSP
+BATCH-2026-006: status=CREATED holder=Org1MSP

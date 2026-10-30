@@ -1,0 +1,20 @@
+ST0 | Создание партии (production@Org1) | production@org1 | ожидание=ok получено=ok | PASS | committed with status (VALID)
+ST1 | Admin-идентичность (OU=admin) выполняет бизнес-операцию | Admin@org1 | ожидание=deny получено=deny | PASS | Error: endorsement failure during invoke. response: status:500 message:"access denied: business operations require a client identity (OU=client), got 
+ST2 | Пользователь Org1 без роли qa (clerk) выпускает партию | clerk@org1 | ожидание=deny получено=deny | PASS | Error: endorsement failure during invoke. response: status:500 message:"access denied: role [qa] required, caller role 
+ST3 | Org2 выпускает партию (атака из medicinebatch_vuln) | logistics@org2 | ожидание=deny получено=deny | PASS | Error: endorsement failure during invoke. response: status:500 message:"access denied: operation requires Org1MSP, caller is Org2MSP"
+ST4 | QA выпускает партию без результатов контроля качества (инвариант) | qa@org1 | ожидание=deny получено=deny | PASS | Error: endorsement failure during invoke. response: status:500 message:"invariant violated: batch BATCH-S-001 has no QC privateDetails"
+ST5 | Результаты контроля переданы обычными аргументами, без transient | qa@org1 | ожидание=deny получено=deny | PASS | Error: endorsement failure during invoke. response: status:500 message:"SetPrivateDetails expects only batch id; QC data must be passed in transient f
+ST6 | Org2 записывает privateDetails (через peer Org1) | logistics@org2 | ожидание=deny получено=deny | PASS | Error: endorsement failure during invoke. response: status:500 message:"access denied: operation requires Org1MSP, caller is Org2MSP"
+ST7 | QA Org1 записывает privateDetails через transient | qa@org1 | ожидание=ok получено=ok | PASS | committed with status (VALID)
+ST8 | Org1 читает privateDetails | qa@org1 | ожидание=ok получено=ok | PASS | {"batchId":"BATCH-S-001","assayPercent":99.6,"impurityPercent":0.08,"dissolutionPercent":92,"microbiology":"COMPLIANT","
+ST9 | Org2 читает privateDetails через свой peer | logistics@org2 | ожидание=deny получено=deny | PASS | Error: endorsement failure during query. response: status:500 message:"access denied: operation requires Org1MSP, caller is Org2MSP"
+ST10 | Org2 читает privateDetails через peer Org1 (член коллекции) | logistics@org2 | ожидание=deny получено=deny | PASS | Error: endorsement failure during query. response: status:500 message:"access denied: operation requires Org1MSP, caller is Org2MSP"
+ST11 | Org2 проверяет хеш предъявленного документа (верный) | logistics@org2 | ожидание=ok получено=ok | PASS | true
+ST12 | Org2 проверяет хеш подменённого документа | logistics@org2 | ожидание=ok получено=ok | PASS | false
+ST13 | QA выпускает партию после контроля качества | qa@org1 | ожидание=ok получено=ok | PASS | committed with status (VALID)
+ST14 | Производитель подтверждает приёмку вместо дистрибьютора | production@org1 | ожидание=deny получено=deny | PASS | Error: endorsement failure during invoke. response: status:500 message:"access denied: operation requires Org2MSP, caller is Org1MSP"
+ST15 | Отгрузка дистрибьютору (production@Org1) | production@org1 | ожидание=ok получено=ok | PASS | committed with status (VALID)
+ST16 | Приёмка партии (logistics@Org2) | logistics@org2 | ожидание=ok получено=ok | PASS | committed with status (VALID)
+ST17 | Недопустимый переход RECEIVED → RELEASED | qa@org1 | ожидание=deny получено=deny | PASS | Error: endorsement failure during invoke. response: status:500 message:"transition RECEIVED -> RELEASED is not allowed"
+ST18 | Повторное создание партии с тем же ID (уникальность) | production@org1 | ожидание=deny получено=deny | PASS | Error: endorsement failure during invoke. response: status:500 message:"batch BATCH-S-001 already exists"
+ИТОГО: PASS=19 FAIL=0

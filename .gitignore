@@ -1,0 +1,9 @@
+# Генерируется при запуске: ключи, сертификаты, ledger, пароли CA
+network/runtime/
+network-bft/runtime/
+**/secrets.env
+*.key
+*_sk
+# Сборка
+chaincode/*/vendor/
+client/bin/

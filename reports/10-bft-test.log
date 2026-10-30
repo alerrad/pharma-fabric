@@ -1,0 +1,47 @@
+$ bash network-bft/bft.sh test
+==> Конфигурация консенсуса канала bftchannel
+   ConsensusType: BFT | consenters: ['1:localhost:7150', '2:localhost:7160', '3:localhost:7170', '4:localhost:7180']
+   Channel capabilities: ['V3_0']
+   n = 4 узла, f = (n - 1) / 3 = 1, кворум = 2f + 1 = 3
+==> Шаг 0. Все 4 orderer работают
+   orderer1 (:7150): height=3 active
+   orderer2 (:7160): height=3 active
+   orderer3 (:7170): height=3 active
+   orderer4 (:7180): height=3 active
+   peer0.org1: {"height":3,"currentBlockHash":"vm4W/9dL0C9P66ay0KL0lVmAktIHndejgBMwwdsMM4I=","previousBlockHash":"kNvM1+XC6D4KhWQDBNnOZFpTQRzXUlldX0VNm7Dlw7g="}
+   T0: CreateBatch BFT-CTRL-000 через orderer1 → txid [05afaf6a814f1008575ce946eec472409f65af76a90e438af2317995409a5048] committed with status (VALID)
+   лидер (по журналам): current view: 0, current leader: 1
+==> Шаг 1. Контролируемый отказ одного orderer (orderer4 — ведомый)
+   orderer4 остановлен (kill 912)
+   T1: CreateBatch BFT-CTRL-001 через orderer1 → txid [f690585bb14a6bcf48c034f7acb6d635f83678ce5daebee062c04f5ddca982f9] committed with status (VALID)
+   orderer1 (:7150): height=5 active
+   orderer2 (:7160): height=5 active
+   orderer3 (:7170): height=5 active
+   orderer4 (:7180): height=недоступен
+   peer0.org1: {"height":5,"currentBlockHash":"mZRYEGb1cPDSSDQ0toBbgQT5t5wlB9/sg5nZve9N97M=","previousBlockHash":"P+tJxxxQTXU1yui2kRkuVE0AZJE8i91VBxHIn95NoR0="}
+==> Шаг 2. Восстановление orderer4 и догон ledger
+   T1b: CreateBatch BFT-CTRL-001B через orderer2 → txid [91aadca2027ebcf6d06841d73ae3943a2721f12d7f300053c88215de3563fc78] committed with status (VALID)
+   orderer4 синхронизирован за 11 с
+   orderer1 (:7150): height=6 active
+   orderer2 (:7160): height=6 active
+   orderer3 (:7170): height=6 active
+   orderer4 (:7180): height=6 active
+   peer0.org1: {"height":6,"currentBlockHash":"/nsrypOtPXOwMLJmcZZHBszz/3M7YS1DJuZUCQdGe5w=","previousBlockHash":"mZRYEGb1cPDSSDQ0toBbgQT5t5wlB9/sg5nZve9N97M="}
+==> Шаг 3. Отказ лидера (orderer1) — смена представления (view change)
+   orderer1 остановлен
+   T2: CreateBatch BFT-CTRL-002 через orderer2 → txid [a7f9edcfbd1a08b8f526b043995c50596a21de93c6426a9f0602165a9570ad23] committed with status (VALID)
+   новый лидер (по журналам): current view: 1, current leader: 2
+2026-10-29 15:08:17.166 +05 005c INFO [orderer.consensus.smartbft.consensus] LoadViewChangeIfApplicable -> Nothing to restore channel=bftchannel
+2026-10-29 15:08:17.166 +05 005f INFO [orderer.consensus.smartbft.consensus] ChangeRole -> Changing to follower role, current view: 0, current leader: 1 channel=bftchannel
+2026-10-29 15:09:12.174 +05 00c6 INFO [orderer.consensus.smartbft.consensus] ChangeRole -> Changing to leader role, current view: 1, current leader: 2 channel=bftchannel
+==> Шаг 4. Граница отказоустойчивости: остановлены 2 orderer (> f)
+   orderer3 и orderer4 остановлены — осталось 2 узла < кворума 3
+   T3: CreateBatch BFT-CTRL-003 через orderer1 → нет фиксации за 40 с (тайм-аут ожидания события): транзакция не упорядочена
+==> Шаг 5. Восстановление orderer3 и orderer4
+   T4: CreateBatch BFT-CTRL-004 через orderer2 → txid [a2c59ee823e52d700ea53e903d5501f798584c88f94ad67a96ffef34c9eac401] committed with status (VALID)
+   orderer1 (:7150): height=9 active
+   orderer2 (:7160): height=9 active
+   orderer3 (:7170): height=9 active
+   orderer4 (:7180): height=9 active
+   peer0.org1: {"height":9,"currentBlockHash":"6ZD2wYbqNN6r9KaCo4vYPRNTk7EiN3XJxEB5oAUiOrE=","previousBlockHash":"iNUW6P12xd2Cs1Mpn60sUzprPWDb+BhSmDJVfRqjRqc="}
+   партии в ledger: ['BFT-CTRL-000:CREATED', 'BFT-CTRL-001:CREATED', 'BFT-CTRL-001B:CREATED', 'BFT-CTRL-002:CREATED', 'BFT-CTRL-003:CREATED', 'BFT-CTRL-004:CREATED']

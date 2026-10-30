@@ -1,0 +1,99 @@
+$ bash network/scripts/tx_v1.sh
+==> T1 CreateBatch BATCH-2026-001  [production@org1]
+$ peer chaincode invoke -C pharmachannel -n medicinebatch -c '{"function":"CreateBatch","Args":["BATCH-2026-001","Paracetamol 500 mg","A2026-001","10000","2026-09-01","2028-09-01"]}' (endorsers: peer0.org1, peer0.org2)
+txid [628a67ccd4d59bc4c3adb0a68e33a53747fae89994d0007ec13295b0131e4ab0] committed with status (VALID) at localhost:9051
+txid [628a67ccd4d59bc4c3adb0a68e33a53747fae89994d0007ec13295b0131e4ab0] committed with status (VALID) at localhost:7051
+Chaincode invoke successful. result: status:200 payload:"{\"docType\":\"medicineBatch\",\"id\":\"BATCH-2026-001\",\"medicineName\":\"Paracetamol 500 mg\",\"lotNumber\":\"A2026-001\",\"quantity\":10000,\"manufactureDate\"
+==> T2 CreateBatch BATCH-2026-002  [production@org1]
+$ peer chaincode invoke -C pharmachannel -n medicinebatch -c '{"function":"CreateBatch","Args":["BATCH-2026-002","Amoxicillin 250 mg","B2026-077","5000","2026-09-15","2027-09-15"]}' (endorsers: peer0.org1, peer0.org2)
+txid [77486a18d1e6781bf69060d79f10982e1b89f471f054206bb973dc18812dc187] committed with status (VALID) at localhost:9051
+txid [77486a18d1e6781bf69060d79f10982e1b89f471f054206bb973dc18812dc187] committed with status (VALID) at localhost:7051
+Chaincode invoke successful. result: status:200 payload:"{\"docType\":\"medicineBatch\",\"id\":\"BATCH-2026-002\",\"medicineName\":\"Amoxicillin 250 mg\",\"lotNumber\":\"B2026-077\",\"quantity\":5000,\"manufactureDate\":
+==> T3 UpdateStatus BATCH-2026-001 → RELEASED  [qa@org1]
+$ peer chaincode invoke -C pharmachannel -n medicinebatch -c '{"function":"UpdateStatus","Args":["BATCH-2026-001","RELEASED"]}' (endorsers: peer0.org1, peer0.org2)
+txid [939354747447fe0851e71452323bad3ea7e7f28723981a6b4b10f48885dc90ff] committed with status (VALID) at localhost:9051
+txid [939354747447fe0851e71452323bad3ea7e7f28723981a6b4b10f48885dc90ff] committed with status (VALID) at localhost:7051
+Chaincode invoke successful. result: status:200 payload:"{\"docType\":\"medicineBatch\",\"id\":\"BATCH-2026-001\",\"medicineName\":\"Paracetamol 500 mg\",\"lotNumber\":\"A2026-001\",\"quantity\":10000,\"manufactureDate\"
+==> T4 TransferBatch BATCH-2026-001 → Org2MSP  [production@org1, через Fabric Gateway]
+$ gateway-client -peer localhost:7051 -msp Org1MSP -chaincode medicinebatch -fn TransferBatch -args BATCH-2026-001,Org2MSP
+[1 Proposal]    TxID=c39ea83457e0442ea578eada19497ad947cb7a0e5b6a93df53e9dfe9bf1fb8ee; клиент Org1MSP подписал предложение medicinebatch[TransferBatch BATCH-2026-001 Org2MSP] (1257 байт)
+[2 Endorsement] Gateway собрал подтверждения [Org1MSP Org2MSP] за 14ms; chaincode status=200, payload={"docType":"medicineBatch","id":"BATCH-2026-001","medicineName":"Paracetamol 500 mg","lotN…
+[3 Ordering]    подписанная транзакция передана Gateway в Ordering Service (4ms)
+[4 Validation]  результат проверки: VALID (VSCC + MVCC)
+[5 Commit]      транзакция в блоке #7; ожидание фиксации 2.007s; всего 2.026s
+==> T5 ReceiveBatch BATCH-2026-001  [logistics@org2]
+$ peer chaincode invoke -C pharmachannel -n medicinebatch -c '{"function":"ReceiveBatch","Args":["BATCH-2026-001"]}' (endorsers: peer0.org1, peer0.org2)
+txid [5f35b3a87f75539a747f83142008054be1ef8ac06b4dc3f7316437e31a565f27] committed with status (VALID) at localhost:9051
+txid [5f35b3a87f75539a747f83142008054be1ef8ac06b4dc3f7316437e31a565f27] committed with status (VALID) at localhost:7051
+Chaincode invoke successful. result: status:200 payload:"{\"docType\":\"medicineBatch\",\"id\":\"BATCH-2026-001\",\"medicineName\":\"Paracetamol 500 mg\",\"lotNumber\":\"A2026-001\",\"quantity\":10000,\"manufactureDate\"
+==> T6 UpdateStatus BATCH-2026-002 → REJECTED  [qa@org1]
+$ peer chaincode invoke -C pharmachannel -n medicinebatch -c '{"function":"UpdateStatus","Args":["BATCH-2026-002","REJECTED"]}' (endorsers: peer0.org1, peer0.org2)
+txid [d48828673eb16e33d2d082c544d7aff8e697f58e1fe4e714a0bbacbf282b182c] committed with status (VALID) at localhost:9051
+txid [d48828673eb16e33d2d082c544d7aff8e697f58e1fe4e714a0bbacbf282b182c] committed with status (VALID) at localhost:7051
+Chaincode invoke successful. result: status:200 payload:"{\"docType\":\"medicineBatch\",\"id\":\"BATCH-2026-002\",\"medicineName\":\"Amoxicillin 250 mg\",\"lotNumber\":\"B2026-077\",\"quantity\":5000,\"manufactureDate\":
+==> T7 CreateBatch BATCH-2026-003  [production@org1]
+$ peer chaincode invoke -C pharmachannel -n medicinebatch -c '{"function":"CreateBatch","Args":["BATCH-2026-003","Ibuprofen 200 mg","C2026-03","7000","2026-09-20","2029-09-20"]}' (endorsers: peer0.org1, peer0.org2)
+txid [bdfe7108d00bf93c3118634f15cd62240c045cc65d01d7cc0b56806a7da3628d] committed with status (VALID) at localhost:9051
+txid [bdfe7108d00bf93c3118634f15cd62240c045cc65d01d7cc0b56806a7da3628d] committed with status (VALID) at localhost:7051
+Chaincode invoke successful. result: status:200 payload:"{\"docType\":\"medicineBatch\",\"id\":\"BATCH-2026-003\",\"medicineName\":\"Ibuprofen 200 mg\",\"lotNumber\":\"C2026-03\",\"quantity\":7000,\"manufactureDate\":\"2
+==> T8/T9 Конкурирующие транзакции к одному ключу (демонстрация MVCC)
+  RELEASED: txid [9edb51737b466a8a7081b525b5433f2b81e4d1cd70e3971adf560d9aaa86a02f] committed with status (MVCC_READ_CONFLICT) at localhost:7051
+  REJECTED: txid [75578893b48b6b619f0509c27925cfe494c271ab5c54e0a060065a9683ab9322] committed with status (VALID) at localhost:7051
+  итоговое состояние: BATCH-2026-003: status=REJECTED holder=Org1MSP
+==> Проверка валидации (ожидаются отказы)
+-- повторное создание BATCH-2026-001 → message:"batch BATCH-2026-001 already exists"
+-- срок годности раньше даты выпуска → message:"expiryDate must be after manufactureDate"
+-- количество = 0 → message:"quantity must be an integer in 1..10000000"
+-- недопустимый переход REJECTED→RELEASED → message:"transition REJECTED -> RELEASED is not allowed"
+-- Org2 создаёт партию → message:"access denied: operation requires Org1MSP, caller is Org2MSP"
+==> Задание 1.6: текущее состояние бизнес-объектов
+$ ReadBatch BATCH-2026-001
+{
+    "docType": "medicineBatch",
+    "id": "BATCH-2026-001",
+    "medicineName": "Paracetamol 500 mg",
+    "lotNumber": "A2026-001",
+    "quantity": 10000,
+    "manufactureDate": "2026-09-01",
+    "expiryDate": "2028-09-01",
+    "manufacturerMSP": "Org1MSP",
+    "holderMSP": "Org2MSP",
+    "status": "RECEIVED",
+    "createdBy": "x509::CN=production-org1.example.com,OU=client,O=Hyperledger,ST=North Carolina,C=US::CN=ca-org1,OU=Fabric,O=Hyperledger,ST=North Carolina,C=US",
+    "createdAt": "2026-10-29T10:04:14Z",
+    "updatedAt": "2026-10-29T10:04:22Z",
+    "lastTxID": "5f35b3a87f75539a747f83142008054be1ef8ac06b4dc3f7316437e31a565f27"
+}
+$ BatchExists BATCH-2026-002
+true
+$ BatchExists BATCH-2026-404
+false
+$ GetAllBatches (через peer0.org2)
+BATCH-2026-001   RECEIVED  holder=Org2MSP  lastTx=5f35b3a87f75539a...
+BATCH-2026-002   REJECTED  holder=Org1MSP  lastTx=d48828673eb16e33...
+BATCH-2026-003   REJECTED  holder=Org1MSP  lastTx=75578893b48b6b61...
+==> Задание 1.7: ledger канала
+Blockchain info: {"height":12,"currentBlockHash":"yih6x2rHSeaIRXnTaHXkaFhjIqzrlODVVyDvn44SmSQ=","previousBlockHash":"kTipT9JDAFTHKMOsNS6PDiqSEbxQc/75LJ/yKQigi3w="}
+2026-10-29 15:04:31.955 +05 0002 INFO [cli.common] readBlock -> Received block: 11
+Последний блок: number=11, previous_hash=kTipT9JDAFTHKMOsNS6PDiqSEbxQc/75LJ/yKQigi3w=, data_hash=jI53K2+i91tGeUKc83uyPsSD0gYOk6UPaSXfax6TTkY=
+  транзакций в блоке: 2; первая: tx_id=75578893b48b6b619f0509c27925cfe494c271ab5c54e0a060065a9683ab9322, type=3, timestamp=2026-10-29T10:04:28.914805873Z
+==> Анализ транзакции T4 (TransferBatch) по этапам
+TxID: c39ea83457e0442ea578eada19497ad947cb7a0e5b6a93df53e9dfe9bf1fb8ee
+1. Proposal:    клиент Org1MSP подписал предложение 2026-10-29T10:04:20.493003986Z; chaincode=medicinebatch v1.0, args=['TransferBatch', 'BATCH-2026-001', 'Org2MSP']
+2. Endorsement: подтверждения от ['Org1MSP', 'Org2MSP'] (политика AND('Org1MSP.peer','Org2MSP.peer')); ответ chaincode: status=200
+     ReadSet  [_lifecycle] key=namespaces/fields/medicinebatch/Sequence version=(block 3, tx 0)
+     ReadSet  [medicinebatch] key=BATCH-2026-001 version=(block 6, tx 0)
+     WriteSet [medicinebatch] key=BATCH-2026-001 → status=SHIPPED
+3. Ordering:    orderer (Raft) включил транзакцию в блок #7 (позиция 0); Writing block [7] (Raft index: 9) to ledger channel=pharmachannel node=1
+4. Validation:  код в TRANSACTIONS_FILTER блока = 0 (VALID); VSCC проверил политику подтверждения, MVCC — версии ReadSet
+5. Commit:      peer0.org1: [pharmachannel] Committed block [7] with 1 transaction(s) in 1ms (state_validation=0ms block_and_pvtdata_commit=1ms state_commit=0ms) commitHash=[ce14ce7ac0c0f53a4b4bbddedbad1a63e7ce06e8c949514afbd894cc2f460a35]
+5. Commit:      peer0.org2: [pharmachannel] Committed block [7] with 1 transaction(s) in 2ms (state_validation=0ms block_and_pvtdata_commit=1ms state_commit=0ms) commitHash=[ce14ce7ac0c0f53a4b4bbddedbad1a63e7ce06e8c949514afbd894cc2f460a35]
+T1 CreateBatch BATCH-2026-001 628a67ccd4d59bc4c3adb0a68e33a53747fae89994d0007ec13295b0131e4ab0
+T2 CreateBatch BATCH-2026-002 77486a18d1e6781bf69060d79f10982e1b89f471f054206bb973dc18812dc187
+T3 UpdateStatus BATCH-2026-001 → RELEASED 939354747447fe0851e71452323bad3ea7e7f28723981a6b4b10f48885dc90ff
+T4 TransferBatch BATCH-2026-001 → Org2MSP c39ea83457e0442ea578eada19497ad947cb7a0e5b6a93df53e9dfe9bf1fb8ee
+T5 ReceiveBatch BATCH-2026-001 5f35b3a87f75539a747f83142008054be1ef8ac06b4dc3f7316437e31a565f27
+T6 UpdateStatus BATCH-2026-002 → REJECTED d48828673eb16e33d2d082c544d7aff8e697f58e1fe4e714a0bbacbf282b182c
+T7 CreateBatch BATCH-2026-003 bdfe7108d00bf93c3118634f15cd62240c045cc65d01d7cc0b56806a7da3628d
+T8 UpdateStatus BATCH-2026-003 (MVCC) 9edb51737b466a8a7081b525b5433f2b81e4d1cd70e3971adf560d9aaa86a02f
+T9 UpdateStatus BATCH-2026-003 (MVCC) 75578893b48b6b619f0509c27925cfe494c271ab5c54e0a060065a9683ab9322

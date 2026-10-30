@@ -1,0 +1,9 @@
+$ bash -c source network/scripts/env_org1.sh && peer channel list 2>/dev/null && peer channel getinfo -c pharmachannel 2>/dev/null
+FABRIC_CFG_PATH=~/fabric/config
+CORE_PEER_LOCALMSPID=Org1MSP
+CORE_PEER_ADDRESS=localhost:7051
+CORE_PEER_MSPCONFIGPATH=~/pharma-fabric/network/runtime/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+CORE_PEER_TLS_ROOTCERT_FILE=~/pharma-fabric/network/runtime/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+Channels peers has joined: 
+pharmachannel
+Blockchain info: {"height":1,"currentBlockHash":"aN7Nh0fiy7kpVePUuwES7KApLWR7kXCqmZ9zE2KGju0="}

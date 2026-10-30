@@ -1,0 +1,43 @@
+$ bash network/scripts/deploy_cc.sh medicinebatch 1.0 1 chaincode/medicinebatch-v1
+==> 0. Зависимости Go (vendor) для ~/pharma-fabric/chaincode/medicinebatch-v1
+go vet: OK
+==> 1. Package: label=medicinebatch_1.0
+PACKAGE_ID=medicinebatch_1.0:255ef1876ae8b61b2795c215d59fd48ae599993f05ac2916c19fc7365aceb42f
+==> 2. Install на peer0.org1 (сборка golang-native builder)
+2026-10-29 15:03:39.963 +05 0001 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Installed remotely: response:{status:200 payload:"\nRmedicinebatch_1.0:255ef1876ae8b61b2795c215d59fd48ae599993f05ac2916c19fc7365aceb42f\x12\x11medicinebatch_1.0"}
+2026-10-29 15:03:39.963 +05 0002 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Chaincode code package identifier: medicinebatch_1.0:255ef1876ae8b61b2795c215d59fd48ae599993f05ac2916c19fc7365aceb42f
+==> 2. Install на peer0.org2 (сборка golang-native builder)
+2026-10-29 15:04:07.625 +05 0001 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Installed remotely: response:{status:200 payload:"\nRmedicinebatch_1.0:255ef1876ae8b61b2795c215d59fd48ae599993f05ac2916c19fc7365aceb42f\x12\x11medicinebatch_1.0"}
+2026-10-29 15:04:07.625 +05 0002 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Chaincode code package identifier: medicinebatch_1.0:255ef1876ae8b61b2795c215d59fd48ae599993f05ac2916c19fc7365aceb42f
+Installed chaincodes on peer:
+Package ID: medicinebatch_1.0:255ef1876ae8b61b2795c215d59fd48ae599993f05ac2916c19fc7365aceb42f, Label: medicinebatch_1.0
+==> 3. Approve for Org1MSP: version=1.0 sequence=1
+2026-10-29 15:04:09.765 +05 0001 INFO [chaincodeCmd] ClientWait -> txid [26952baad291317a54faf52a890ab5467bd0eaa88bdf18552841c9ddffaa059c] committed with status (VALID) at localhost:7051
+==> 3. Approve for Org2MSP: version=1.0 sequence=1
+2026-10-29 15:04:11.836 +05 0001 INFO [chaincodeCmd] ClientWait -> txid [0e36786beef1179a65450127ea8bef600bf1d7d03fd6c519f6d62fe838bd7f10] committed with status (VALID) at localhost:9051
+==> 4. Check commit readiness
+{
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": true
+	}
+}
+==> 5. Commit
+2026-10-29 15:04:14.013 +05 0001 INFO [chaincodeCmd] ClientWait -> txid [5a1176d2cf430c154d2251b2ebb59d970df62f978d107ae453732094a3e7cd9e] committed with status (VALID) at localhost:9051
+2026-10-29 15:04:14.013 +05 0002 INFO [chaincodeCmd] ClientWait -> txid [5a1176d2cf430c154d2251b2ebb59d970df62f978d107ae453732094a3e7cd9e] committed with status (VALID) at localhost:7051
+==> 6. Query committed
+Committed chaincode definition for chaincode 'medicinebatch' on channel 'pharmachannel':
+Version: 1.0, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]
+{
+	"sequence": 1,
+	"version": "1.0",
+	"endorsement_plugin": "escc",
+	"validation_plugin": "vscc",
+	"validation_parameter": "CiwSDBIKCAISAggAEgIIARoNEgsKB09yZzFNU1AQAxoNEgsKB09yZzJNU1AQAw==",
+	"collections": {},
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": true
+	}
+}
+✔ medicinebatch 1.0 (sequence 1) зафиксирован в канале pharmachannel

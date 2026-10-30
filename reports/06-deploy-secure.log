@@ -1,0 +1,107 @@
+$ bash network/scripts/deploy_cc.sh medicinebatch_secure 1.0 1 chaincode/medicinebatch-secure chaincode/medicinebatch-secure/collections_config.json
+==> 0. Зависимости Go (vendor) для ~/pharma-fabric/chaincode/medicinebatch-secure
+go vet: OK
+==> 1. Package: label=medicinebatch_secure_1.0
+PACKAGE_ID=medicinebatch_secure_1.0:327aec819d4a9d0d1a7de7a97857a7b5c75b226aeb03ad181762ad782706a481
+==> 2. Install на peer0.org1 (сборка golang-native builder)
+2026-10-29 15:06:04.308 +05 0001 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Installed remotely: response:{status:200 payload:"\nYmedicinebatch_secure_1.0:327aec819d4a9d0d1a7de7a97857a7b5c75b226aeb03ad181762ad782706a481\x12\x18medicinebatch_secure_1.0"}
+2026-10-29 15:06:04.308 +05 0002 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Chaincode code package identifier: medicinebatch_secure_1.0:327aec819d4a9d0d1a7de7a97857a7b5c75b226aeb03ad181762ad782706a481
+==> 2. Install на peer0.org2 (сборка golang-native builder)
+2026-10-29 15:06:31.774 +05 0001 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Installed remotely: response:{status:200 payload:"\nYmedicinebatch_secure_1.0:327aec819d4a9d0d1a7de7a97857a7b5c75b226aeb03ad181762ad782706a481\x12\x18medicinebatch_secure_1.0"}
+2026-10-29 15:06:31.775 +05 0002 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Chaincode code package identifier: medicinebatch_secure_1.0:327aec819d4a9d0d1a7de7a97857a7b5c75b226aeb03ad181762ad782706a481
+Installed chaincodes on peer:
+Package ID: medicinebatch_1.0:255ef1876ae8b61b2795c215d59fd48ae599993f05ac2916c19fc7365aceb42f, Label: medicinebatch_1.0
+Package ID: medicinebatch_vuln_1.0:5c08e271293728962623fc93185a97d304cd12f4ac77c39f6ccc70480cc0f656, Label: medicinebatch_vuln_1.0
+Package ID: medicinebatch_secure_1.0:327aec819d4a9d0d1a7de7a97857a7b5c75b226aeb03ad181762ad782706a481, Label: medicinebatch_secure_1.0
+==> 3. Approve for Org1MSP: version=1.0 sequence=1
+2026-10-29 15:06:33.944 +05 0001 INFO [chaincodeCmd] ClientWait -> txid [9a0f67a195da1687b9f79619c3a00e4a37c15c2c199a44944b7e6e963f0f9133] committed with status (VALID) at localhost:7051
+==> 3. Approve for Org2MSP: version=1.0 sequence=1
+2026-10-29 15:06:36.025 +05 0001 INFO [chaincodeCmd] ClientWait -> txid [2a569b5742c7ab7836c94d61678cb9185d7c88fe4c9bd88c011838c4c3f01d90] committed with status (VALID) at localhost:9051
+==> 4. Check commit readiness
+{
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": true
+	}
+}
+==> 5. Commit
+2026-10-29 15:06:38.179 +05 0001 INFO [chaincodeCmd] ClientWait -> txid [fa885f9cdf27f9a0acbfde6f2e52dc64157226062e439d9110179970e5746b76] committed with status (VALID) at localhost:7051
+2026-10-29 15:06:38.179 +05 0002 INFO [chaincodeCmd] ClientWait -> txid [fa885f9cdf27f9a0acbfde6f2e52dc64157226062e439d9110179970e5746b76] committed with status (VALID) at localhost:9051
+==> 6. Query committed
+Committed chaincode definition for chaincode 'medicinebatch_secure' on channel 'pharmachannel':
+Version: 1.0, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]
+{
+	"sequence": 1,
+	"version": "1.0",
+	"endorsement_plugin": "escc",
+	"validation_plugin": "vscc",
+	"validation_parameter": "CiwSDBIKCAISAggAEgIIARoNEgsKB09yZzFNU1AQAxoNEgsKB09yZzJNU1AQAw==",
+	"collections": {
+		"config": [
+			{
+				"Payload": {
+					"StaticCollectionConfig": {
+						"name": "privateDetailsOrg1",
+						"member_orgs_policy": {
+							"Payload": {
+								"SignaturePolicy": {
+									"rule": {
+										"Type": {
+											"NOutOf": {
+												"n": 1,
+												"rules": [
+													{
+														"Type": {
+															"SignedBy": 0
+														}
+													}
+												]
+											}
+										}
+									},
+									"identities": [
+										{
+											"principal": "CgdPcmcxTVNQ"
+										}
+									]
+								}
+							}
+						},
+						"member_only_read": true,
+						"member_only_write": true,
+						"endorsement_policy": {
+							"Type": {
+								"SignaturePolicy": {
+									"rule": {
+										"Type": {
+											"NOutOf": {
+												"n": 1,
+												"rules": [
+													{
+														"Type": {
+															"SignedBy": 0
+														}
+													}
+												]
+											}
+										}
+									},
+									"identities": [
+										{
+											"principal": "CgdPcmcxTVNQEAM="
+										}
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": true
+	}
+}
+✔ medicinebatch_secure 1.0 (sequence 1) зафиксирован в канале pharmachannel

